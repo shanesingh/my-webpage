@@ -1,0 +1,1728 @@
+<!--
+  ============================================================
+  Shane Singh — Personal Website
+  ============================================================
+  FILE STRUCTURE:
+  1. <head>        — meta tags, Google Fonts, embedded <style>
+  2. <body>
+     a. <nav>      — sticky navigation bar
+     b. #hero      — hero section with typing animation
+     c. #about     — short bio
+     d. #journey   — coding timeline / progress tracker
+     e. #projects  — filterable project card grid
+     f. #hobbies   — golf, automobiles, travel subsections
+     g. #vlog      — travel vlog video embed cards
+     h. #contact   — social links / connect section
+     i. <footer>   — built-by line + dynamic year
+  3. <script>      — all JavaScript at bottom of body
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shane Singh — learning to code, building cool things, obsessed with cars, chasing birdies, exploring the world." />
+  <title>Shane Singh</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+       These variables power the entire theme system.
+       Changing --accent here (or via the color picker) updates
+       every accent-colored element on the page at once.
+       ============================================================ */
+    :root {
+      /* Dark mode defaults */
+      --bg:       #0f0f0f;
+      --card-bg:  #1a1a1a;
+      --text:     #e8e8e8;
+      --text-muted: #888;
+      --accent:   #6ee7b7;
+      --border:   #2a2a2a;
+      --nav-bg:   rgba(15, 15, 15, 0.85);
+      --shadow:   0 4px 24px rgba(0,0,0,0.4);
+      --radius:   12px;
+      --transition: 0.25s ease;
+    }
+
+    /* Light mode overrides — applied when <html data-theme="light"> */
+    [data-theme="light"] {
+      --bg:       #f5f5f5;
+      --card-bg:  #ffffff;
+      --text:     #1a1a1a;
+      --text-muted: #666;
+      --border:   #e0e0e0;
+      --nav-bg:   rgba(245, 245, 245, 0.85);
+      --shadow:   0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      transition: background-color var(--transition), color var(--transition);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity var(--transition);
+    }
+    a:hover { opacity: 0.75; }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ============================================================
+       UTILITY CLASSES
+       ============================================================ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Section wrapper — consistent vertical spacing */
+    .section {
+      padding: 6rem 0;
+    }
+
+    /* Section heading with accent underline decoration */
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-top: 0.4rem;
+      transition: background var(--transition);
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Logo / name on the left */
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    /* Nav links on the right */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+      background: rgba(110, 231, 183, 0.08);
+      opacity: 1;
+    }
+
+    /* Hamburger for mobile */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* Theme toggle + color picker controls */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Dark/light mode toggle button */
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .theme-toggle:hover { border-color: var(--accent); }
+
+    /* Accent color picker swatches */
+    .color-picker {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .swatch:hover { transform: scale(1.2); }
+    .swatch.active { border-color: var(--text); }
+
+    /* ============================================================
+       HERO SECTION
+       ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 60px; /* offset for fixed nav */
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle animated background grid */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Typing animation container */
+    .hero-tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--text-muted);
+      font-weight: 400;
+      min-height: 2em;
+    }
+    .hero-tagline .typed-text {
+      color: var(--text);
+      font-weight: 500;
+    }
+    /* Blinking cursor */
+    .hero-tagline .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.9s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Primary button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); opacity: 1; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f0f0f;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      animation: float 2s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 20px; height: 20px; }
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ============================================================
+       ABOUT SECTION
+       ============================================================ */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+    .about-text p strong { color: var(--text); }
+
+    /* Stat chips */
+    .about-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .stat-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .stat-chip span { color: var(--accent); font-weight: 700; }
+
+    /* Avatar placeholder */
+    .about-avatar {
+      aspect-ratio: 1;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-avatar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(110,231,183,0.1));
+    }
+
+    /* ============================================================
+       CODING JOURNEY / TIMELINE
+       ============================================================ */
+    #journey {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    /* Vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 2.5rem 2rem;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    /* Dot on the timeline */
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.35rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      transform: translateX(calc(-50% + 1px));
+      transition: background var(--transition);
+    }
+    .timeline-item.upcoming::before {
+      background: var(--border);
+    }
+
+    .timeline-date {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Progress bar for current skill level */
+    .skill-bars {
+      margin-top: 3rem;
+    }
+    .skill-bar-item {
+      margin-bottom: 1.25rem;
+    }
+    .skill-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+    .skill-bar-label span:last-child { color: var(--text-muted); }
+    .skill-bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      width: 0; /* animated via JS */
+      transition: width 1s ease;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* ============================================================
+       PROJECTS SECTION
+       ============================================================ */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent);
+      color: #0f0f0f;
+      border-color: var(--accent);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Project card */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, opacity 0.3s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent);
+    }
+    /* Hidden state for filter */
+    .card.hidden {
+      display: none;
+    }
+
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+    /* Colored placeholder when no real image */
+    .card-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+    .card-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .card-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .card-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color var(--transition);
+    }
+    .card-link:hover { color: var(--accent); opacity: 1; }
+
+    /* ============================================================
+       HOBBIES SECTION
+       ============================================================ */
+    #hobbies {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hobby-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .hobby-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .hobby-tab:hover { color: var(--text); }
+    .hobby-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .hobby-panel { display: none; }
+    .hobby-panel.active { display: block; }
+
+    .hobby-intro {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+
+    /* Photo gallery grid */
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+    .photo-item {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .photo-item:hover {
+      transform: scale(1.03);
+      box-shadow: var(--shadow);
+    }
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ============================================================
+       TRAVEL VLOG SECTION
+       ============================================================ */
+    .vlog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .vlog-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+    .vlog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent);
+    }
+
+    .vlog-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .vlog-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Play button overlay */
+    .play-btn {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .vlog-card:hover .play-btn {
+      background: var(--accent);
+      transform: scale(1.1);
+    }
+    .play-btn svg { width: 20px; height: 20px; fill: white; margin-left: 3px; }
+
+    .vlog-info {
+      padding: 1rem 1.25rem;
+    }
+    .vlog-location {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .vlog-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .vlog-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       CONTACT / CONNECT SECTION
+       ============================================================ */
+    #contact {
+      text-align: center;
+    }
+
+    .contact-intro {
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .social-btn svg { width: 20px; height: 20px; }
+    .social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      opacity: 1;
+    }
+
+    .email-section {
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .email-section p { color: var(--text-muted); margin-bottom: 0.75rem; }
+    .email-link {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer span { color: var(--accent); }
+
+    /* ============================================================
+       MOBILE NAVIGATION
+       ============================================================ */
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        transform: translateY(-110%);
+        transition: transform 0.3s ease;
+        gap: 0.25rem;
+      }
+      .nav-links.open { transform: translateY(0); }
+      .nav-links a { padding: 0.75rem 1rem; width: 100%; }
+
+      #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .about-avatar { max-width: 200px; }
+
+      .journey-grid { grid-template-columns: 1fr; gap: 2rem; }
+
+      .hobby-tabs { overflow-x: auto; }
+    }
+
+    @media (max-width: 480px) {
+      .section { padding: 4rem 0; }
+      .hero-cta { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL ANIMATION
+       Elements with .reveal class fade in when scrolled into view
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delay helpers */
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION BAR
+       Sticky top bar with logo, nav links, theme toggle, color picker
+       ============================================================ -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+
+      <!-- Logo / name -->
+      <a href="#hero" class="nav-logo">Shane<span>.</span></a>
+
+      <!-- Mobile hamburger toggle -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Nav links -->
+      <ul class="nav-links" id="navLinks" role="list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#hobbies">Hobbies</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <!-- Theme toggle + accent color picker -->
+      <div class="nav-controls">
+        <!-- Color swatches — clicking changes --accent CSS variable -->
+        <div class="color-picker" role="group" aria-label="Accent color picker">
+          <button class="swatch active" data-color="#6ee7b7" style="background:#6ee7b7" aria-label="Mint green accent" title="Mint"></button>
+          <button class="swatch" data-color="#60a5fa" style="background:#60a5fa" aria-label="Blue accent" title="Blue"></button>
+          <button class="swatch" data-color="#a78bfa" style="background:#a78bfa" aria-label="Purple accent" title="Purple"></button>
+          <button class="swatch" data-color="#fb923c" style="background:#fb923c" aria-label="Orange accent" title="Orange"></button>
+        </div>
+
+        <!-- Dark/light mode toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+          🌙
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO SECTION
+       Full-viewport intro with typing animation
+       ============================================================ -->
+  <section id="hero" aria-label="Hero">
+    <div class="container hero-content">
+      <p class="hero-eyebrow">Hey, I'm</p>
+      <h1 class="hero-name">Shane Singh</h1>
+
+      <!-- Typing animation — JS cycles through phrases below -->
+      <p class="hero-tagline">
+        I'm <span class="typed-text" id="typedText"></span><span class="cursor" aria-hidden="true"></span>
+      </p>
+
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">
+          <!-- Arrow right icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          See My Work
+        </a>
+        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+
+    <!-- Animated scroll hint -->
+    <div class="scroll-hint" aria-hidden="true">
+      <span>scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT SECTION
+       Short bio + avatar placeholder + stat chips
+       ============================================================ -->
+  <section id="about" class="section" aria-labelledby="about-heading">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- Text column -->
+        <div class="about-text">
+          <h2 class="section-title" id="about-heading">About Me</h2>
+          <p class="section-subtitle">A little bit about who I am</p>
+
+          <p>
+            Hey! I'm <strong>Shane Singh</strong> — a self-taught developer in the making, based wherever the road takes me.
+            I started learning to code because I wanted to build things that actually matter to me, and I haven't looked back since.
+          </p>
+          <p>
+            When I'm not staring at a screen, you'll find me on the golf course chasing that elusive birdie,
+            wrenching on cars in the garage, or planning the next trip somewhere I've never been.
+          </p>
+          <p>
+            This site is my <strong>digital garden</strong> — a living, growing space where I document my journey,
+            share projects, and connect with people who are into the same things.
+          </p>
+
+          <!-- Fun stat chips -->
+          <div class="about-stats">
+            <div class="stat-chip">⛳ Handicap: <span>~18</span></div>
+            <div class="stat-chip">🚗 Cars wrenched: <span>12+</span></div>
+            <div class="stat-chip">✈️ Countries visited: <span>8</span></div>
+            <div class="stat-chip">☕ Coffees coded on: <span>∞</span></div>
+          </div>
+        </div>
+
+        <!-- Avatar placeholder column -->
+        <div class="reveal reveal-delay-2">
+          <div class="about-avatar" role="img" aria-label="Shane Singh avatar placeholder">
+            👨‍💻
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CODING JOURNEY SECTION
+       Visual timeline of learning milestones + skill progress bars
+       ============================================================ -->
+  <section id="journey" class="section" aria-labelledby="journey-heading">
+    <div class="container">
+      <h2 class="section-title" id="journey-heading">Coding Journey</h2>
+      <p class="section-subtitle">From zero to... somewhere interesting</p>
+
+      <div class="journey-grid">
+
+        <!-- Timeline column -->
+        <div>
+          <ol class="timeline" aria-label="Learning milestones">
+
+            <li class="timeline-item reveal">
+              <div class="timeline-date">Jan 2024</div>
+              <div class="timeline-title">The Beginning 🌱</div>
+              <div class="timeline-desc">Wrote my first "Hello, World!" in Python. Realized I actually enjoy this.</div>
+            </li>
+
+            <li class="timeline-item reveal reveal-delay-1">
+              <div class="timeline-date">Mar 2024</div>
+              <div class="timeline-title">HTML & CSS Basics</div>
+              <div class="timeline-desc">Built my first static webpage. It was ugly, but it was mine.</div>
+            </li>
+
+            <li class="timeline-item reveal reveal-delay-2">
+              <div class="timeline-date">Jun 2024</div>
+              <div class="timeline-title">JavaScript Fundamentals</div>
+              <div class="timeline-desc">DOM manipulation, events, fetch API. Things started clicking.</div>
+            </li>
+
+            <li class="timeline-item reveal reveal-delay-3">
+              <div class="timeline-date">Sep 2024</div>
+              <div class="timeline-title">First Real Project 🚀</div>
+              <div class="timeline-desc">Built a golf scorecard tracker app. Scratched my own itch.</div>
+            </li>
+
+            <li class="timeline-item reveal reveal-delay-4">
+              <div class="timeline-date">Dec 2024</div>
+              <div class="timeline-title">This Website!</div>
+              <div class="timeline-desc">Launched shanesingh.com. A milestone I'm proud of.</div>
+            </li>
+
+            <li class="timeline-item upcoming reveal">
+              <div class="timeline-date">2025 →</div>
+              <div class="timeline-title">Next: React & Backend 🔭</div>
+              <div class="timeline-desc">Learning React, Node.js, and maybe a database or two. Watch this space.</div>
+            </li>
+
+          </ol>
+        </div>
+
+        <!-- Skill bars column -->
+        <div class="skill-bars reveal">
+          <h3 style="font-size:1rem; font-weight:600; margin-bottom:1.5rem; color:var(--text-muted);">Current Skill Levels</h3>
+
+          <div class="skill-bar-item">
+            <div class="skill-bar-label"><span>HTML / CSS</span><span>75%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
+          </div>
+
+          <div class="skill-bar-item">
+            <div class="skill-bar-label"><span>JavaScript</span><span>50%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="50"></div></div>
+          </div>
+
+          <div class="skill-bar-item">
+            <div class="skill-bar-label"><span>Python</span><span>40%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="40"></div></div>
+          </div>
+
+          <div class="skill-bar-item">
+            <div class="skill-bar-label"><span>Git / GitHub</span><span>60%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="60"></div></div>
+          </div>
+
+          <div class="skill-bar-item">
+            <div class="skill-bar-label"><span>React</span><span>10%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="10"></div></div>
+          </div>
+
+          <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--text-muted);">
+            * Self-assessed. Improving every day. 📈
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- ============================================================
+       PROJECTS SECTION
+       Filterable card grid — filter buttons show/hide cards by category
+       ============================================================ -->
+  <section id="projects" class="section" aria-labelledby="projects-heading">
+    <div class="container">
+      <h2 class="section-title" id="projects-heading">Projects</h2>
+      <p class="section-subtitle">Things I've built, documented, or obsessed over</p>
+
+      <!-- Filter buttons — data-filter matches data-category on cards -->
+      <div class="filter-bar" role="group" aria-label="Filter projects by category">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="code">💻 Code</button>
+        <button class="filter-btn" data-filter="golf">⛳ Golf</button>
+        <button class="filter-btn" data-filter="cars">🚗 Cars</button>
+        <button class="filter-btn" data-filter="travel">✈️ Travel</button>
+      </div>
+
+      <!-- Project cards grid -->
+      <div class="projects-grid" id="projectsGrid">
+
+        <!-- Card: Code project -->
+        <article class="card reveal" data-category="code" aria-label="Golf Scorecard App project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#1a2a1a,#0d1f0d);">⛳</div>
+          <div class="card-body">
+            <div class="card-tag">Code</div>
+            <h3 class="card-title">Golf Scorecard App</h3>
+            <p class="card-desc">A web app to track golf scores, calculate handicap, and visualize round history. Built with vanilla JS.</p>
+            <div class="card-links">
+              <a href="#" class="card-link" aria-label="View Golf Scorecard App on GitHub">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+              </a>
+              <a href="#" class="card-link" aria-label="View Golf Scorecard App live demo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                Live Demo
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card: Code project -->
+        <article class="card reveal reveal-delay-1" data-category="code" aria-label="Personal Website project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#1a1a2e,#0d0d1f);">🌐</div>
+          <div class="card-body">
+            <div class="card-tag">Code</div>
+            <h3 class="card-title">This Website</h3>
+            <p class="card-desc">My personal digital garden. Single HTML file, vanilla CSS/JS, dark mode, typing animation, and more.</p>
+            <div class="card-links">
+              <a href="https://github.com/shanesingh" class="card-link" aria-label="View website source on GitHub">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card: Golf project -->
+        <article class="card reveal reveal-delay-2" data-category="golf" aria-label="Golf Course Reviews project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#1a2e1a,#0a1f0a);">🏌️</div>
+          <div class="card-body">
+            <div class="card-tag">Golf</div>
+            <h3 class="card-title">Course Reviews</h3>
+            <p class="card-desc">Notes and ratings from every course I've played. Honest takes, no fluff. Favorite so far: Pebble Beach (someday).</p>
+            <div class="card-links">
+              <a href="#" class="card-link">Read More →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card: Cars project -->
+        <article class="card reveal" data-category="cars" aria-label="Car Build Log project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#2e1a1a,#1f0a0a);">🔧</div>
+          <div class="card-body">
+            <div class="card-tag">Cars</div>
+            <h3 class="card-title">Build Log: Project E46</h3>
+            <p class="card-desc">Documenting my BMW E46 restoration — from rusty shell to weekend driver. Parts list, costs, lessons learned.</p>
+            <div class="card-links">
+              <a href="#" class="card-link">Read More →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card: Travel project -->
+        <article class="card reveal reveal-delay-1" data-category="travel" aria-label="Japan Travel Guide project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#2e1a2e,#1f0a1f);">🗾</div>
+          <div class="card-body">
+            <div class="card-tag">Travel</div>
+            <h3 class="card-title">Japan — 2 Weeks Solo</h3>
+            <p class="card-desc">Tokyo, Kyoto, Osaka, Hiroshima. A photo diary and practical guide for first-timers.</p>
+            <div class="card-links">
+              <a href="#" class="card-link">View Photos →</a>
+              <a href="#vlog" class="card-link">Watch Vlog →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card: Code project -->
+        <article class="card reveal reveal-delay-2" data-category="code" aria-label="Car Maintenance Tracker project">
+          <div class="card-thumb-placeholder" style="background:linear-gradient(135deg,#1a1f2e,#0a0f1f);">📋</div>
+          <div class="card-body">
+            <div class="card-tag">Code</div>
+            <h3 class="card-title">Car Maintenance Tracker</h3>
+            <p class="card-desc">A simple web app to log oil changes, tire rotations, and other maintenance tasks for multiple vehicles.</p>
+            <div class="card-links">
+              <a href="#" class="card-link">GitHub →</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOBBIES SECTION
+       Tabbed interface: Golf | Automobiles | Travel
+       Each tab has a description + photo gallery
+       ============================================================ -->
+  <section id="hobbies" class="section" aria-labelledby="hobbies-heading">
+    <div class="container">
+      <h2 class="section-title" id="hobbies-heading">Hobbies</h2>
+      <p class="section-subtitle">The things that keep me sane</p>
+
+      <!-- Tab buttons -->
+      <div class="hobby-tabs" role="tablist" aria-label="Hobby categories">
+        <button class="hobby-tab active" role="tab" aria-selected="true" aria-controls="tab-golf" id="btn-golf">⛳ Golf</button>
+        <button class="hobby-tab" role="tab" aria-selected="false" aria-controls="tab-cars" id="btn-cars">🚗 Automobiles</button>
+        <button class="hobby-tab" role="tab" aria-selected="false" aria-controls="tab-travel" id="btn-travel">✈️ Travel</button>
+      </div>
+
+      <!-- Golf panel -->
+      <div class="hobby-panel active" id="tab-golf" role="tabpanel" aria-labelledby="btn-golf">
+        <p class="hobby-intro">
+          Golf is my meditation. There's nothing quite like an early morning round — dew on the fairway,
+          no one else around, just you and the course. I'm a mid-handicapper working on my short game
+          and trying not to lose too many balls in the water.
+        </p>
+        <div class="photo-gallery" aria-label="Golf photo gallery">
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf1/400/400" alt="Golf course fairway" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf2/400/400" alt="Golf green with flag" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf3/400/400" alt="Golf bag on cart" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf4/400/400" alt="Sunrise on the golf course" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf5/400/400" alt="Golf club closeup" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/golf6/400/400" alt="Golf course landscape" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <!-- Automobiles panel -->
+      <div class="hobby-panel" id="tab-cars" role="tabpanel" aria-labelledby="btn-cars">
+        <p class="hobby-intro">
+          Cars are in my blood. I grew up watching my dad work on engines, and now I do the same.
+          I love everything from weekend track days to diagnosing a weird knock at 3am.
+          Current project: a BMW E46 that's slowly becoming something special.
+        </p>
+        <div class="photo-gallery" aria-label="Automobiles photo gallery">
+          <div class="photo-item"><img src="https://picsum.photos/seed/car1/400/400" alt="BMW E46 project car" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/car2/400/400" alt="Engine bay work" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/car3/400/400" alt="Car on a mountain road" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/car4/400/400" alt="Garage tools" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/car5/400/400" alt="Car detail shot" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/car6/400/400" alt="Track day action shot" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <!-- Travel panel -->
+      <div class="hobby-panel" id="tab-travel" role="tabpanel" aria-labelledby="btn-travel">
+        <p class="hobby-intro">
+          Travel is how I reset. I try to go somewhere new at least once a year — ideally somewhere
+          that challenges me, feeds my curiosity, and gives me great photos. Japan, Portugal, and
+          Iceland are recent highlights. Next up: Southeast Asia.
+        </p>
+        <div class="photo-gallery" aria-label="Travel photo gallery">
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel1/400/400" alt="Tokyo street at night" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel2/400/400" alt="Kyoto temple" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel3/400/400" alt="Iceland landscape" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel4/400/400" alt="Lisbon viewpoint" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel5/400/400" alt="Mountain hiking trail" loading="lazy" /></div>
+          <div class="photo-item"><img src="https://picsum.photos/seed/travel6/400/400" alt="Beach sunset" loading="lazy" /></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <!-- ============================================================
+       TRAVEL VLOG SECTION
+       Video embed cards with placeholder thumbnails
+       ============================================================ -->
+  <section id="vlog" class="section" aria-labelledby="vlog-heading">
+    <div class="container">
+      <h2 class="section-title" id="vlog-heading">Travel Vlog</h2>
+      <p class="section-subtitle">Moving pictures from the road</p>
+
+      <div class="vlog-grid">
+
+        <!-- Vlog card 1 -->
+        <article class="vlog-card reveal" aria-label="Japan vlog video">
+          <div class="vlog-thumb">
+            <img src="https://picsum.photos/seed/vlog1/600/338" alt="Japan vlog thumbnail" loading="lazy" />
+            <div class="play-btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="vlog-info">
+            <div class="vlog-location">🗾 Japan</div>
+            <h3 class="vlog-title">2 Weeks in Japan — Full Trip Vlog</h3>
+            <p class="vlog-meta">14 days · 5 cities · 1 unforgettable trip</p>
+          </div>
+        </article>
+
+        <!-- Vlog card 2 -->
+        <article class="vlog-card reveal reveal-delay-1" aria-label="Iceland vlog video">
+          <div class="vlog-thumb">
+            <img src="https://picsum.photos/seed/vlog2/600/338" alt="Iceland vlog thumbnail" loading="lazy" />
+            <div class="play-btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="vlog-info">
+            <div class="vlog-location">��🇸 Iceland</div>
+            <h3 class="vlog-title">Ring Road in 7 Days</h3>
+            <p class="vlog-meta">7 days · 1,332 km · Northern lights spotted</p>
+          </div>
+        </article>
+
+        <!-- Vlog card 3 -->
+        <article class="vlog-card reveal reveal-delay-2" aria-label="Portugal vlog video">
+          <div class="vlog-thumb">
+            <img src="https://picsum.photos/seed/vlog3/600/338" alt="Portugal vlog thumbnail" loading="lazy" />
+            <div class="play-btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="vlog-info">
+            <div class="vlog-location">🇵�� Portugal</div>
+            <h3 class="vlog-title">Lisbon & Porto — A Weekend Escape</h3>
+            <p class="vlog-meta">5 days · Pastel de nata count: 11</p>
+          </div>
+        </article>
+
+        <!-- Vlog card 4 — Coming soon -->
+        <article class="vlog-card reveal reveal-delay-3" aria-label="Southeast Asia vlog coming soon">
+          <div class="vlog-thumb" style="background:var(--border);">
+            <div style="text-align:center; color:var(--text-muted);">
+              <div style="font-size:2.5rem; margin-bottom:0.5rem;">🎬</div>
+              <div style="font-size:0.85rem; font-weight:500;">Coming Soon</div>
+            </div>
+          </div>
+          <div class="vlog-info">
+            <div class="vlog-location">🌏 Southeast Asia</div>
+            <h3 class="vlog-title">Next Adventure — TBD</h3>
+            <p class="vlog-meta">Planning in progress...</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT / CONNECT SECTION
+       Social links as icon-style buttons
+       ============================================================ -->
+  <section id="contact" class="section" aria-labelledby="contact-heading">
+    <div class="container">
+      <h2 class="section-title" id="contact-heading" style="display:block; text-align:center;">Let's Connect</h2>
+      <p class="contact-intro">
+        Whether you want to talk code, swap golf tips, debate the best car ever made,
+        or just say hi — my DMs are open.
+      </p>
+
+      <!-- Social link buttons -->
+      <div class="social-links">
+
+        <!-- GitHub -->
+        <a href="https://github.com/shanesingh" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Shane Singh on GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+
+        <!-- Twitter / X -->
+        <a href="https://twitter.com/shanesingh" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Shane Singh on X (Twitter)">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Twitter / X
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://instagram.com/shanesingh" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Shane Singh on Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+          Instagram
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://youtube.com/@shanesingh" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Shane Singh on YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          YouTube
+        </a>
+
+      </div>
+
+      <!-- Email CTA -->
+      <div class="email-section">
+        <p>Or drop me an email</p>
+        <a href="mailto:hello@shanesingh.com" class="email-link">hello@shanesingh.com</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       Year is injected dynamically by JavaScript
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <p>Built by <span>Shane Singh</span> &mdash; <span id="footer-year"></span></p>
+      <p style="margin-top:0.4rem; font-size:0.75rem;">Hosted on GitHub Pages &bull; shanesingh.com</p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       All interactive behavior lives here, at the bottom of <body>
+       so the DOM is fully loaded before scripts run.
+
+       Sections:
+       1. Theme toggle (dark/light) + localStorage persistence
+       2. Accent color picker
+       3. Mobile nav toggle
+       4. Typing animation (hero tagline)
+       5. Active nav link on scroll (Intersection Observer)
+       6. Scroll reveal animation (Intersection Observer)
+       7. Project filter buttons
+       8. Skill bar animation (triggered on scroll into view)
+       9. Hobby tabs
+       10. Footer year
+       ============================================================ -->
+  <script>
+    // ============================================================
+    // 1. THEME TOGGLE
+    // Reads saved preference from localStorage on load,
+    // toggles between 'dark' and 'light' on button click.
+    // ============================================================
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    // Load saved theme (default: dark)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      themeToggle.textContent = next === 'dark' ? '🌙' : '☀️';
+      localStorage.setItem('theme', next);
+    });
+
+    // ============================================================
+    // 2. ACCENT COLOR PICKER
+    // Each swatch button has a data-color attribute.
+    // Clicking it updates the --accent CSS custom property on :root.
+    // ============================================================
+    const swatches = document.querySelectorAll('.swatch');
+
+    // Load saved accent color
+    const savedAccent = localStorage.getItem('accent');
+    if (savedAccent) {
+      document.documentElement.style.setProperty('--accent', savedAccent);
+      swatches.forEach(s => {
+        s.classList.toggle('active', s.dataset.color === savedAccent);
+      });
+    }
+
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        const color = swatch.dataset.color;
+        document.documentElement.style.setProperty('--accent', color);
+        localStorage.setItem('accent', color);
+        // Update active state
+        swatches.forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+      });
+    });
+
+    // ============================================================
+    // 3. MOBILE NAV TOGGLE
+    // Hamburger button shows/hides the nav links on small screens.
+    // ============================================================
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close nav when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ============================================================
+    // 4. TYPING ANIMATION
+    // Cycles through an array of phrases, typing and deleting
+    // each one character by character.
+    // ============================================================
+    const phrases = [
+      'learning to code.',
+      'building cool things.',
+      'obsessed with cars.',
+      'chasing birdies.',
+      'exploring the world.'
+    ];
+
+    const typedEl = document.getElementById('typedText');
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typingTimeout;
+
+    function type() {
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isDeleting) {
+        // Remove one character
+        typedEl.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        // Add one character
+        typedEl.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      // Typing speed: faster when deleting
+      let speed = isDeleting ? 60 : 100;
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        // Finished typing — pause then start deleting
+        speed = 1800;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        // Finished deleting — move to next phrase
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        speed = 400;
+      }
+
+      typingTimeout = setTimeout(type, speed);
+    }
+
+    // Start the typing animation
+    type();
+
+    // ============================================================
+    // 5. ACTIVE NAV LINK ON SCROLL
+    // Uses IntersectionObserver to detect which section is in view
+    // and highlights the corresponding nav link.
+    // ============================================================
+    const sections = document.querySelectorAll('section[id]');
+    const navLinkEls = document.querySelectorAll('.nav-links a');
+
+    const navObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navLinkEls.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+            });
+          }
+        });
+      },
+      {
+        // Trigger when section is 40% visible
+        threshold: 0.4,
+        rootMargin: '-60px 0px 0px 0px' // offset for fixed nav
+      }
+    );
+
+    sections.forEach(section => navObserver.observe(section));
+
+    // ============================================================
+    // 6. SCROLL REVEAL ANIMATION
+    // Elements with class .reveal fade in when scrolled into view.
+    // ============================================================
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Unobserve after revealing — no need to watch anymore
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ============================================================
+    // 7. PROJECT FILTER BUTTONS
+    // Clicking a filter button shows only cards with matching
+    // data-category attribute (or all cards for "all").
+    // ============================================================
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('#projectsGrid .card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // Update active button state
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/hide cards
+        projectCards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.classList.toggle('hidden', !match);
+        });
+      });
+    });
+
+    // ============================================================
+    // 8. SKILL BAR ANIMATION
+    // Animates skill bars to their target width when they scroll
+    // into view. Width is stored in data-width attribute.
+    // ============================================================
+    const skillBars = document.querySelectorAll('.skill-bar-fill');
+
+    const skillObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const targetWidth = entry.target.dataset.width;
+            entry.target.style.width = targetWidth + '%';
+            skillObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    skillBars.forEach(bar => skillObserver.observe(bar));
+
+    // ============================================================
+    // 9. HOBBY TABS
+    // Clicking a tab button shows the corresponding panel
+    // and hides the others.
+    // ============================================================
+    const hobbyTabs = document.querySelectorAll('.hobby-tab');
+    const hobbyPanels = document.querySelectorAll('.hobby-panel');
+
+    hobbyTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.getAttribute('aria-controls');
+
+        // Update tab active states
+        hobbyTabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        // Show target panel, hide others
+        hobbyPanels.forEach(panel => {
+          panel.classList.toggle('active', panel.id === targetId);
+        });
+      });
+    });
+
+    // ============================================================
+    // 10. FOOTER YEAR
+    // Dynamically inserts the current year so it never goes stale.
+    // ============================================================
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  </script>
+
+</body>
+</html>
