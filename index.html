@@ -8,7 +8,7 @@
      a. <nav>      — sticky navigation bar
      b. #hero      — hero section with typing animation
      c. #about     — short bio
-     d. #focus     — what I'm building / learning next
+     d. #focus     — interests & what's on the go
      e. #projects  — filterable project card grid
      f. #hobbies   — golf, automobiles, travel subsections
      g. #vlog      — travel vlog video embed cards
@@ -435,7 +435,7 @@
     }
 
     /* ============================================================
-       FOCUS / WHAT I'M BUILDING SECTION
+       FOCUS / WHAT I'M INTO SECTION
        ============================================================ */
     #focus {
       background: var(--card-bg);
@@ -957,18 +957,16 @@
       <p class="section-subtitle">A little bit about who I am</p>
 
           <p>
-            Hey! I'm <strong>Shane Singh</strong> — a developer with years of programming coursework under my belt,
-            now focused on leveling up from hobbyist to someone who builds things that actually ship.
-            I've taken more computer science classes than I can count, and I can hold my own in a codebase —
-            I just never went the professional route. That's what this chapter is about.
+            Hey! I'm <strong>Shane Singh</strong> — a Software Engineering Manager with a passion for technology
+            and a love for the things that make life interesting outside of work.
           </p>
           <p>
-            When I'm not pushing commits, you'll find me on the golf course chasing that elusive birdie,
-            wrenching on cars in the garage, or planning the next trip somewhere I've never been.
+            When I'm not leading teams, you'll find me on the golf course, wrenching on cars in the garage,
+            or planning the next trip somewhere I've never been.
           </p>
           <p>
-            This site is my <strong>digital garden</strong> — a living space where I document what I'm building,
-            what I'm learning, and the things outside of code that make life interesting.
+            This site is my <strong>digital garden</strong> — a place to share the projects I'm proud of,
+            the experiences worth documenting, and the things I'm into.
           </p>
 
           <!-- Fun stat chips -->
@@ -993,54 +991,53 @@
 
   <!-- ============================================================
        FOCUS SECTION
-       What I'm currently building and learning — forward-looking,
-       no skill bars or timelines, just intent and momentum.
+       Personal interests and what's currently on the go.
        ============================================================ -->
   <section id="focus" class="section" aria-labelledby="focus-heading">
     <div class="container">
-      <h2 class="section-title" id="focus-heading">What I'm Building</h2>
-      <p class="section-subtitle">Current focus areas and projects in progress</p>
+      <h2 class="section-title" id="focus-heading">What I'm Into</h2>
+      <p class="section-subtitle">A few things keeping me busy outside of work</p>
 
       <div class="focus-grid">
 
         <div class="focus-card reveal">
-          <div class="focus-card-icon">&#x269B;&#xFE0F;</div>
-          <h3 class="focus-card-title">Going Deep on React</h3>
+          <div class="focus-card-icon">⛳</div>
+          <h3 class="focus-card-title">Golf</h3>
           <p class="focus-card-desc">
-            Moving beyond vanilla JS into the React ecosystem &mdash; components, hooks, state management,
-            and how modern frontend apps are actually structured and shipped.
+            Early morning rounds, working on the short game, and chasing that elusive birdie.
+            Golf is my reset button — nothing else clears the head quite like 18 holes.
           </p>
-          <span class="focus-card-status">&#x1F525; Active</span>
+          <span class="focus-card-status">&#x1F525; Always</span>
         </div>
 
         <div class="focus-card reveal reveal-delay-1">
-          <div class="focus-card-icon">&#x1F3A8;</div>
-          <h3 class="focus-card-title">Frontend Craft</h3>
+          <div class="focus-card-icon">🚗</div>
+          <h3 class="focus-card-title">Automobiles</h3>
           <p class="focus-card-desc">
-            Sharpening the details that separate good UIs from great ones &mdash; animations, accessibility,
-            responsive design, and the kind of polish that makes people notice.
+            From weekend drives to garage wrenching — cars are a lifelong passion.
+            I love the mechanics, the history, and the community around them.
           </p>
-          <span class="focus-card-status">&#x1F525; Active</span>
+          <span class="focus-card-status">&#x1F525; Always</span>
         </div>
 
         <div class="focus-card reveal reveal-delay-2">
-          <div class="focus-card-icon">&#x1F6E0;&#xFE0F;</div>
-          <h3 class="focus-card-title">Sample Projects</h3>
+          <div class="focus-card-icon">✈️</div>
+          <h3 class="focus-card-title">Travel</h3>
           <p class="focus-card-desc">
-            Building a set of real, deployable projects to demonstrate what I can do &mdash;
-            not toy examples, but things with actual utility. Coming to the Projects section soon.
+            Exploring new places, documenting the journey, and collecting experiences.
+            New destinations and vlogs coming to this site soon.
           </p>
-          <span class="focus-card-status">&#x23F3; In Progress</span>
+          <span class="focus-card-status">&#x23F3; Next trip loading...</span>
         </div>
 
         <div class="focus-card reveal reveal-delay-3">
-          <div class="focus-card-icon">&#x1F527;</div>
-          <h3 class="focus-card-title">Dev Tooling &amp; Workflow</h3>
+          <div class="focus-card-icon">🛠️</div>
+          <h3 class="focus-card-title">Personal Projects</h3>
           <p class="focus-card-desc">
-            Getting comfortable with the full professional stack &mdash; build tools, version control workflows,
-            CI/CD basics, and the habits that make a developer productive on a real team.
+            Always tinkering with something — whether it's a side project, a home improvement,
+            or something that just seemed like a good idea at the time.
           </p>
-          <span class="focus-card-status">&#x23F3; In Progress</span>
+          <span class="focus-card-status">&#x23F3; Coming Soon</span>
         </div>
 
       </div>
@@ -1313,8 +1310,8 @@
     <div class="container">
       <h2 class="section-title" id="contact-heading" style="display:block; text-align:center;">Let's Connect</h2>
       <p class="contact-intro">
-        Whether you want to talk code, swap golf tips, debate the best car ever made,
-        or just say hi — my DMs are open.
+        Whether you want to swap golf tips, debate the best car ever made,
+        talk travel, or just say hi — my DMs are open.
       </p>
 
       <!-- Social link buttons -->
@@ -1465,11 +1462,11 @@
     // each one character by character.
     // ============================================================
     const phrases = [
-      'leveling up as a developer.',
-      'building things that ship.',
+      'a Software Engineering Manager.',
       'obsessed with cars.',
       'chasing birdies.',
-      'exploring the world.'
+      'exploring the world.',
+      'always building something.'
     ];
 
     const typedEl = document.getElementById('typedText');
