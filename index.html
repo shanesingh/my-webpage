@@ -8,7 +8,7 @@
      a. <nav>      — sticky navigation bar
      b. #hero      — hero section with typing animation
      c. #about     — short bio
-     d. #journey   — coding timeline / progress tracker
+     d. #focus     — what I'm building / learning next
      e. #projects  — filterable project card grid
      f. #hobbies   — golf, automobiles, travel subsections
      g. #vlog      — travel vlog video embed cards
@@ -435,105 +435,59 @@
     }
 
     /* ============================================================
-       CODING JOURNEY / TIMELINE
+       FOCUS / WHAT I'M BUILDING SECTION
        ============================================================ */
-    #journey {
+    #focus {
       background: var(--card-bg);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
 
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-    /* Vertical line */
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
 
-    .timeline-item {
-      position: relative;
-      padding: 0 0 2.5rem 2rem;
+    .focus-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color var(--transition), transform 0.25s, box-shadow 0.25s;
     }
-    .timeline-item:last-child { padding-bottom: 0; }
-
-    /* Dot on the timeline */
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -2rem;
-      top: 0.35rem;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--bg);
-      transform: translateX(calc(-50% + 1px));
-      transition: background var(--transition);
-    }
-    .timeline-item.upcoming::before {
-      background: var(--border);
+    .focus-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
     }
 
-    .timeline-date {
+    .focus-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .focus-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .focus-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .focus-card-status {
+      display: inline-block;
+      margin-top: 1rem;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 0.25rem;
-    }
-    .timeline-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .timeline-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
     }
 
-    /* Progress bar for current skill level */
-    .skill-bars {
-      margin-top: 3rem;
-    }
-    .skill-bar-item {
-      margin-bottom: 1.25rem;
-    }
-    .skill-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-    }
-    .skill-bar-label span:last-child { color: var(--text-muted); }
-    .skill-bar-track {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .skill-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 3px;
-      width: 0; /* animated via JS */
-      transition: width 1s ease;
-    }
-
-    .journey-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
+    @media (max-width: 768px) {
+      .focus-grid { grid-template-columns: 1fr; }
     }
 
     /* ============================================================
@@ -881,8 +835,6 @@
       #about .about-grid { grid-template-columns: 1fr; gap: 2rem; }
       .about-avatar { max-width: 200px; }
 
-      .journey-grid { grid-template-columns: 1fr; gap: 2rem; }
-
       .hobby-tabs { overflow-x: auto; }
     }
 
@@ -935,7 +887,7 @@
       <!-- Nav links -->
       <ul class="nav-links" id="navLinks" role="list">
         <li><a href="#about">About</a></li>
-        <li><a href="#journey">Journey</a></li>
+        <li><a href="#focus">Focus</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#hobbies">Hobbies</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -1040,96 +992,55 @@
   </section>
 
   <!-- ============================================================
-       CODING JOURNEY SECTION
-       Visual timeline of learning milestones + skill progress bars
+       FOCUS SECTION
+       What I'm currently building and learning — forward-looking,
+       no skill bars or timelines, just intent and momentum.
        ============================================================ -->
-  <section id="journey" class="section" aria-labelledby="journey-heading">
+  <section id="focus" class="section" aria-labelledby="focus-heading">
     <div class="container">
-      <h2 class="section-title" id="journey-heading">Coding Journey</h2>
-      <p class="section-subtitle">Years of learning — now building things that matter</p>
+      <h2 class="section-title" id="focus-heading">What I'm Building</h2>
+      <p class="section-subtitle">Current focus areas and projects in progress</p>
 
-      <div class="journey-grid">
+      <div class="focus-grid">
 
-        <!-- Timeline column -->
-        <div>
-          <ol class="timeline" aria-label="Learning milestones">
-
-            <li class="timeline-item reveal">
-              <div class="timeline-date">Early Days</div>
-              <div class="timeline-title">First Programming Classes �</div>
-              <div class="timeline-desc">Started with the fundamentals — data structures, algorithms, procedural programming. Built a solid foundation across multiple courses over the years.</div>
-            </li>
-
-            <li class="timeline-item reveal reveal-delay-1">
-              <div class="timeline-date">Along the Way</div>
-              <div class="timeline-title">Web, OOP & More</div>
-              <div class="timeline-desc">Picked up HTML, CSS, JavaScript, Python, and object-oriented design through coursework. Could read and write code competently — just never shipped anything professionally.</div>
-            </li>
-
-            <li class="timeline-item reveal reveal-delay-2">
-              <div class="timeline-date">The Shift</div>
-              <div class="timeline-title">From Student to Builder</div>
-              <div class="timeline-desc">Decided to stop just learning and start building. Real projects, real constraints, real feedback. The gap between "can code" and "ships code" is where the growth happens.</div>
-            </li>
-
-            <li class="timeline-item reveal reveal-delay-3">
-              <div class="timeline-date">2024</div>
-              <div class="timeline-title">First Personal Projects 🚀</div>
-              <div class="timeline-desc">Built tools I actually use — a golf scorecard tracker, a car maintenance logger. Small scope, but fully mine from idea to deployment.</div>
-            </li>
-
-            <li class="timeline-item reveal reveal-delay-4">
-              <div class="timeline-date">2025</div>
-              <div class="timeline-title">This Website</div>
-              <div class="timeline-desc">Launched shanesingh.com as a living portfolio. A place to document the journey, not just the destination.</div>
-            </li>
-
-            <li class="timeline-item upcoming reveal">
-              <div class="timeline-date">Next →</div>
-              <div class="timeline-title">Going Deeper 🔭</div>
-              <div class="timeline-desc">Leveling up with modern frameworks, backend development, and professional-grade tooling. The goal: close the gap between hobbyist and pro.</div>
-            </li>
-
-          </ol>
+        <div class="focus-card reveal">
+          <div class="focus-card-icon">&#x269B;&#xFE0F;</div>
+          <h3 class="focus-card-title">Going Deep on React</h3>
+          <p class="focus-card-desc">
+            Moving beyond vanilla JS into the React ecosystem &mdash; components, hooks, state management,
+            and how modern frontend apps are actually structured and shipped.
+          </p>
+          <span class="focus-card-status">&#x1F525; Active</span>
         </div>
 
-        <!-- Skill bars column -->
-        <div class="skill-bars reveal">
-          <h3 style="font-size:1rem; font-weight:600; margin-bottom:1.5rem; color:var(--text-muted);">Current Skill Levels</h3>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>HTML / CSS</span><span>85%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
-          </div>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>JavaScript</span><span>70%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
-          </div>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>Python</span><span>65%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="65"></div></div>
-          </div>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>Git / GitHub</span><span>75%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
-          </div>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>Data Structures & Algorithms</span><span>70%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
-          </div>
-
-          <div class="skill-bar-item">
-            <div class="skill-bar-label"><span>React / Modern Frameworks</span><span>30%</span></div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" data-width="30"></div></div>
-          </div>
-
-          <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--text-muted);">
-            * Self-assessed. The foundation is solid — now sharpening the edges. 📈
+        <div class="focus-card reveal reveal-delay-1">
+          <div class="focus-card-icon">&#x1F3A8;</div>
+          <h3 class="focus-card-title">Frontend Craft</h3>
+          <p class="focus-card-desc">
+            Sharpening the details that separate good UIs from great ones &mdash; animations, accessibility,
+            responsive design, and the kind of polish that makes people notice.
           </p>
+          <span class="focus-card-status">&#x1F525; Active</span>
+        </div>
+
+        <div class="focus-card reveal reveal-delay-2">
+          <div class="focus-card-icon">&#x1F6E0;&#xFE0F;</div>
+          <h3 class="focus-card-title">Sample Projects</h3>
+          <p class="focus-card-desc">
+            Building a set of real, deployable projects to demonstrate what I can do &mdash;
+            not toy examples, but things with actual utility. Coming to the Projects section soon.
+          </p>
+          <span class="focus-card-status">&#x23F3; In Progress</span>
+        </div>
+
+        <div class="focus-card reveal reveal-delay-3">
+          <div class="focus-card-icon">&#x1F527;</div>
+          <h3 class="focus-card-title">Dev Tooling &amp; Workflow</h3>
+          <p class="focus-card-desc">
+            Getting comfortable with the full professional stack &mdash; build tools, version control workflows,
+            CI/CD basics, and the habits that make a developer productive on a real team.
+          </p>
+          <span class="focus-card-status">&#x23F3; In Progress</span>
         </div>
 
       </div>
@@ -1476,9 +1387,8 @@
        5. Active nav link on scroll (Intersection Observer)
        6. Scroll reveal animation (Intersection Observer)
        7. Project filter buttons
-       8. Skill bar animation (triggered on scroll into view)
-       9. Hobby tabs
-       10. Footer year
+       8. Hobby tabs
+       9. Footer year
        ============================================================ -->
   <script>
     // ============================================================
@@ -1675,29 +1585,7 @@
     });
 
     // ============================================================
-    // 8. SKILL BAR ANIMATION
-    // Animates skill bars to their target width when they scroll
-    // into view. Width is stored in data-width attribute.
-    // ============================================================
-    const skillBars = document.querySelectorAll('.skill-bar-fill');
-
-    const skillObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const targetWidth = entry.target.dataset.width;
-            entry.target.style.width = targetWidth + '%';
-            skillObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    skillBars.forEach(bar => skillObserver.observe(bar));
-
-    // ============================================================
-    // 9. HOBBY TABS
+    // 8. HOBBY TABS
     // Clicking a tab button shows the corresponding panel
     // and hides the others.
     // ============================================================
@@ -1724,7 +1612,7 @@
     });
 
     // ============================================================
-    // 10. FOOTER YEAR
+    // 9. FOOTER YEAR
     // Dynamically inserts the current year so it never goes stale.
     // ============================================================
     document.getElementById('footer-year').textContent = new Date().getFullYear();
